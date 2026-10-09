@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Учёба группы</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;600;800&family=Noto+Serif+SC:wght@600&display=swap">
+<style>
+:root{--bg:#F1F4F1;--card:#fff;--ink:#1B2A28;--mute:#5E6F6B;--line:#D5DEDA;--acc:#2B7A6B;--accInk:#fff;--warn:#B8392A;--soft:#E3ECE8;--good:#DDF1E8;--bad:#F8E1DC;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121A19;--card:#1B2625;--ink:#E6EEEB;--mute:#9AAEA9;--line:#2C3A38;--acc:#5FC2AE;--accInk:#0E1816;--warn:#F08A7A;--soft:#243230;--good:#1F3A32;--bad:#43241F}}
+:root[data-theme="dark"]{--bg:#121A19;--card:#1B2625;--ink:#E6EEEB;--mute:#9AAEA9;--line:#2C3A38;--acc:#5FC2AE;--accInk:#0E1816;--warn:#F08A7A;--soft:#243230;--good:#1F3A32;--bad:#43241F}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:1.6rem;font-weight:800;margin:8px 0 2px;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 16px}
+nav{display:flex;gap:6px;overflow-x:auto;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;margin-bottom:12px;z-index:2}
+nav button{flex:1 0 auto;min-height:44px;padding:0 14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--acc);color:var(--accInk);border-color:var(--acc)}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:10px}
+.row{display:flex;gap:12px;align-items:flex-start}
+.row input{width:22px;height:22px;margin-top:3px;accent-color:var(--acc);flex:none}
+.hw.done .t{text-decoration:line-through;color:var(--mute)}
+.meta{color:var(--mute);font-size:.9rem}
+.due{font-weight:600}.due.warn{color:var(--warn)}
+.big{font-size:2.4rem;font-weight:800;text-align:center;margin:10px 0 18px}
+.hz{font-family:"Noto Serif SC","Songti SC","SimSun",serif;font-size:4.2rem;text-align:center;line-height:1.2;margin:8px 0}
+.flip{width:100%;min-height:190px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:14px;font:inherit;cursor:pointer;padding:16px}
+.py{font-size:1.5rem;font-weight:600;text-align:center;color:var(--acc)}
+.tr{text-align:center;font-size:1.15rem}
+.hint{text-align:center;color:var(--mute);font-size:.9rem;margin-top:8px}
+.btns{display:flex;gap:10px;margin-top:10px}
+.btn{flex:1;min-height:48px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+.btn.main{background:var(--acc);color:var(--accInk);border-color:var(--acc)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{min-height:56px;font:inherit;font-size:1.3rem;font-weight:600;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+.opt.good{background:var(--good);border-color:var(--acc)}
+.opt.bad{background:var(--bad);border-color:var(--warn)}
+.fb{margin:12px 0 0;font-weight:600;text-align:center}
+details.card summary{cursor:pointer;font-weight:600}
+details.card p{margin:10px 0 0;color:var(--mute)}
+.foot{color:var(--mute);font-size:.85rem;margin-top:20px}
+</style>
+</head>
+<body>
+<main>
+<h1>Учёба группы</h1>
+<p class="sub">ДЗ, карточки по китайскому, тренажёр по английскому и конспекты в одном месте.</p>
+<nav id="tabs" role="tablist"></nav>
+<section id="view"></section>
+<p class="foot">Сейчас здесь примеры. Настоящие ДЗ, слова и конспекты будут добавлены вместо них.</p>
+</main>
+<script>
+const DATA={
+ hw:[
+  {s:"Китайский",t:"Выучить 10 слов из урока",d:"2026-10-12"},
+  {s:"Английский",t:"Подготовить диалог по фонетике",d:"2026-10-14"},
+  {s:"Перевод",t:"Письменный перевод абзаца",d:"2026-10-16"}
+ ],
+ cards:[
+  {h:"你好",p:"nǐ hǎo",r:"привет"},{h:"谢谢",p:"xièxie",r:"спасибо"},
+  {h:"老师",p:"lǎoshī",r:"учитель"},{h:"学生",p:"xuésheng",r:"студент"},
+  {h:"朋友",p:"péngyou",r:"друг"},{h:"大学",p:"dàxué",r:"университет"},
+  {h:"汉语",p:"Hànyǔ",r:"китайский язык"},{h:"翻译",p:"fānyì",r:"перевод, переводчик"}
+ ],
+ sounds:["[iː]","[ɪ]","[e]","[æ]"],
+ words:[
+  {w:"see",t:"/siː/",s:"[iː]"},{w:"feet",t:"/fiːt/",s:"[iː]"},{w:"seat",t:"/siːt/",s:"[iː]"},
+  {w:"sit",t:"/sɪt/",s:"[ɪ]"},{w:"bit",t:"/bɪt/",s:"[ɪ]"},{w:"fill",t:"/fɪl/",s:"[ɪ]"},
+  {w:"ten",t:"/ten/",s:"[e]"},{w:"men",t:"/men/",s:"[e]"},{w:"head",t:"/hed/",s:"[e]"},
+  {w:"cat",t:"/kæt/",s:"[æ]"},{w:"man",t:"/mæn/",s:"[æ]"},{w:"hat",t:"/hæt/",s:"[æ]"}
+ ],
+ notes:[
+  {s:"Фонетика",t:"Положение языка при гласных",b:"Здесь будет текст конспекта."},
+  {s:"Китайский",t:"Тоны и пиньинь",b:"Здесь будет текст конспекта."},
+  {s:"Перевод",t:"Основы письменного перевода",b:"Здесь будет текст конспекта."}
+ ]
+};
+const st={
+ get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},
+ set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TABS=[["hw","ДЗ"],["zh","Китайский"],["en","Английский"],["notes","Конспекты"]];
+let tab=st.get("tab","hw"),flip=false,pos=0;
+let q={w:null,ans:null,ok:0,all:0};
+const view=document.getElementById("view"),tabs=document.getElementById("tabs");
+
+function left(d){
+ const t=new Date();t.setHours(0,0,0,0);
+ return Math.round((new Date(d+"T00:00:00")-t)/864e5);
+}
+function dueText(n){
+ if(n<0)return "просрочено";if(n===0)return "сегодня";if(n===1)return "завтра";return "через "+n+" дн.";
+}
+function vHw(){
+ const done=st.get("done",[]);
+ const list=[...DATA.hw].sort((a,b)=>a.d.localeCompare(b.d));
+ return list.map(h=>{
+  const key=h.s+"|"+h.t,isDone=done.includes(key),n=left(h.d);
+  const date=new Date(h.d+"T00:00:00").toLocaleDateString("ru",{day:"numeric",month:"long"});
+  return `<label class="card row hw ${isDone?"done":""}"><input type="checkbox" data-act="done" data-k="${esc(key)}" ${isDone?"checked":""}>
+  <span><span class="t">${esc(h.t)}</span><br><span class="meta">${esc(h.s)} · до ${date} · </span><span class="due ${!isDone&&n<=1?"warn":""}">${isDone?"сделано":dueText(n)}</span></span></label>`;
+ }).join("");
+}
+function vZh(){
+ const known=st.get("known",[]);
+ const queue=DATA.cards.filter(c=>!known.includes(c.h));
+ const prog=`<p class="meta">Выучено ${known.length} из ${DATA.cards.length}</p>`;
+ if(!queue.length)return prog+`<div class="card"><p class="tr">Все карточки выучены.</p><div class="btns"><button class="btn main" data-act="reset">Начать заново</button></div></div>`;
+ const c=queue[pos%queue.length];
+ return prog+`<button class="flip" data-act="flip" aria-label="Перевернуть карточку"><div class="hz">${c.h}</div>
+ ${flip?`<div class="py">${esc(c.p)}</div><div class="tr">${esc(c.r)}</div>`:`<div class="hint">Нажми, чтобы увидеть пиньинь и перевод</div>`}</button>
+ <div class="btns"><button class="btn" data-act="again">Ещё раз</button><button class="btn main" data-act="know">Знаю</button></div>`;
+}
+function nextWord(){
+ let w;do{w=DATA.words[Math.floor(Math.random()*DATA.words.length)]}while(q.w&&w.w===q.w.w);
+ q.w=w;q.ans=null;
+}
+function vEn(){
+ if(!q.w)nextWord();
+ const w=q.w,a=q.ans;
+ const opts=DATA.sounds.map(s=>{
+  const c=a?(s===w.s?"good":(s===a?"bad":"")):"";
+  return `<button class="opt ${c}" data-act="ans" data-v="${esc(s)}" ${a?"disabled":""}>${esc(s)}</button>`;
+ }).join("");
+ return `<p class="meta">Верно ${q.ok} из ${q.all}</p><div class="card"><p class="meta" style="text-align:center">Какой гласный звук в слове?</p>
+ <div class="big">${esc(w.w)}</div><div class="opts">${opts}</div>
+ ${a?`<p class="fb">${a===w.s?"Верно":"Неверно"}: ${esc(w.w)} ${esc(w.t)}</p><div class="btns"><button class="btn main" data-act="next">Дальше</button></div>`:""}</div>`;
+}
+function vNotes(){
+ return DATA.notes.map(n=>`<details class="card"><summary>${esc(n.t)} <span class="meta">· ${esc(n.s)}</span></summary><p>${esc(n.b)}</p></details>`).join("");
+}
+function render(){
+ tabs.innerHTML=TABS.map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${k===tab}">${l}</button>`).join("");
+ view.innerHTML={hw:vHw,zh:vZh,en:vEn,notes:vNotes}[tab]();
+}
+document.addEventListener("click",e=>{
+ const t=e.target.closest("[data-tab]");
+ if(t){tab=t.dataset.tab;st.set("tab",tab);flip=false;render();return}
+ const b=e.target.closest("[data-act]");if(!b)return;
+ const act=b.dataset.act;
+ if(act==="done"){const d=st.get("done",[]),k=b.dataset.k,i=d.indexOf(k);i<0?d.push(k):d.splice(i,1);st.set("done",d)}
+ if(act==="flip")flip=!flip;
+ if(act==="again"){pos++;flip=false}
+ if(act==="know"){const known=st.get("known",[]);const queue=DATA.cards.filter(c=>!known.includes(c.h));const c=queue[pos%queue.length];if(c){known.push(c.h);st.set("known",known)}flip=false}
+ if(act==="reset"){st.set("known",[]);pos=0;flip=false}
+ if(act==="ans"&&!q.ans){q.ans=b.dataset.v;q.all++;if(q.ans===q.w.s)q.ok++}
+ if(act==="next")nextWord();
+ render();
+});
+render();
+</script>
+</body>
+</html>
